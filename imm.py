@@ -222,17 +222,15 @@ class IMM(Generic[MT]):
         sensor_state: Dict[str, Any] = None,
     ) -> float:
 
-        raise NotImplementedError  # TODO: remove when implemented
-
         mode_conditioned_ll = np.fromiter(
             (
-                None  # TODO: your state filter (fs under) should be able to calculate the mode conditional log likelihood at z from modestate_s
+                fs.loglikelihood(z, modestate_s, sensor_state=sensor_state)  # TODO: your state filter (fs under) should be able to calculate the mode conditional log likelihood at z from modestate_s
                 for fs, modestate_s in zip(self.filters, immstate.components)
             ),
             dtype=float,
         )
 
-        ll = None  # weighted average of likelihoods (not log!)
+        ll = np.average(mode_conditioned_ll, immstate.weights)  # weighted average of likelihoods (not log!)
 
         assert np.isfinite(ll), "IMM.loglikelihood: ll not finite"
         assert isinstance(ll, float) or isinstance(
