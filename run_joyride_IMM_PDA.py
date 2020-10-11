@@ -120,25 +120,25 @@ plt.show(block=False)
 
 # %% setup and track
 
-run_three_models = False  # Set to false to run IMM with two models (CV and CT)
+run_three_models = True  # Set to false to run IMM with two models (CV and CT)
 
 # sensor
-sigma_z = 12 # 10
-clutter_intensity = 2 / (4000*4000) # 1e-2
+sigma_z = 14 # 10
+clutter_intensity = 4 / (4000*4000) # 1e-2
 PD = 0.65 # 0.8
 gate_size = 5
 
 # dynamic models
-sigma_a_CV = 4
-sigma_a_CT = 4
+sigma_a_CV = 0.5
+sigma_a_CT = 1
 sigma_omega = 0.3
-sigma_a_CV_high = 10
+sigma_a_CV_high = 2
 
 
 # markov chain
-PI11 = 0.6
-PI22 = 0.6
-PI33 = 0.6
+PI11 = 0.7
+PI22 = 0.7
+PI33 = 0.7
 
 p10 = 0.5  # initvalue for mode probabilities
 p20 = 0.5
