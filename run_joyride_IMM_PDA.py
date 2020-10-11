@@ -140,12 +140,14 @@ PI11 = 0.6
 PI22 = 0.6
 PI33 = 0.6
 
-p10 = 0.3  # initvalue for mode probabilities
-p20 = 0.35
-p30 = 0.35 # Change when using three models, p10, p20 and p30 must sum to 1
+p10 = 0.5  # initvalue for mode probabilities
+p20 = 0.5
 
 PI = np.array([[PI11, (1-PI11)], [(1-PI22), PI22]])
 if run_three_models:
+    p10 = 0.3  # initvalue for mode probabilities
+    p20 = 0.35
+    p30 = 0.35 
     PI = np.array([[PI11, (1-PI11)/2, (1-PI11)/2], [(1-PI22)/2, PI22, (1-PI22)/2], [(1-PI33)/2, (1-PI33)/2, PI33]])
 assert np.allclose(np.sum(PI, axis=1), 1), "rows of PI must sum to 1"
 
