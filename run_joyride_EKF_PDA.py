@@ -94,17 +94,23 @@ ax1.plot(*Xgt.T[:2], color="C0", linewidth=1.5)
 ax1.set_title("True trajectory and the nearby measurements")
 plt.show(block=False)
 
-
-sigma_a = 3
-sigma_z = 2
+sigma_z = 10
 sigma_omega = 0.2
-PD = 0.8
-clutter_intensity = 2 / (4000*4000)
+PD = 0.65
+clutter_intensity = 3 / (4000*4000)
 gate_size = 5
 
-#dynamic_model = dynamicmodels.WhitenoiseAccelleration(sigma_a)
-dynamic_model = dynamicmodels.ConstantTurnrate(sigma_a, sigma_omega)
-measurement_model = measurementmodels.CartesianPosition(sigma_z)
+useTurnRateModel = False
+    
+if useTurnRateModel:
+    sigma_a = 6
+    dynamic_model = dynamicmodels.ConstantTurnrate(sigma_a, sigma_omega)
+else:
+    sigma_a = 4
+    dynamic_model = dynamicmodels.WhitenoiseAccelleration(sigma_a, n = 5)
+
+
+measurement_model = measurementmodels.CartesianPosition(sigma_z, state_dim = 5)
 ekf_filter = ekf.EKF(dynamic_model, measurement_model)
 
 tracker = pda.PDA(ekf_filter, clutter_intensity, PD, gate_size)
@@ -115,9 +121,9 @@ NEESpos = np.zeros(K)
 NEESvel = np.zeros(K)
 
 # initialize
-x_bar_init = np.array([7100, 3620, 0, 0])
+x_bar_init = np.array([7100, 3620, 0, 0, 0])
 
-P_bar_init = np.diag([40, 40, 10, 10]) ** 2
+P_bar_init = np.diag([40, 40, 10, 10, 0.1]) ** 2
 
 #init_state = tracker.init_filter_state({"mean": x_bar_init, "cov": P_bar_init})
 init_state = GaussParams(x_bar_init, P_bar_init)
@@ -152,6 +158,19 @@ velRMSE = np.sqrt(np.mean(velerr ** 2)) # not true RMSE (which is over monte car
 peak_pos_deviation = poserr.max()
 peak_vel_deviation = velerr.max()
 
+# consistency
+confprob = 0.9
+CI2 = np.array(scipy.stats.chi2.interval(confprob, 2))
+CI4 = np.array(scipy.stats.chi2.interval(confprob, 4))
+
+confprob = confprob
+CI2K = np.array(scipy.stats.chi2.interval(confprob, 2 * K)) / K
+CI4K = np.array(scipy.stats.chi2.interval(confprob, 4 * K)) / K
+ANEESpos = np.mean(NEESpos)
+ANEESvel = np.mean(NEESvel)
+ANEES = np.mean(NEES)
+
+
 # %% plots
 fig3, ax3 = plt.subplots(num=3, clear=True)
 ax3.plot(*x_hat.T[:2], label=r"$\hat x$")
@@ -159,4 +178,42 @@ ax3.plot(*Xgt.T[:2], label="$x$")
 ax3.set_title(
     rf"$\sigma_a = {sigma_a:.3f}$, \sigma_z = {sigma_z:.3f}, posRMSE = {posRMSE:.2f}, velRMSE = {velRMSE:.2f}"
 )
-plt.show(block=True)
+
+adjTs = np.arange(K) * Ts[0]
+avgTs = np.average(Ts)
+
+# NEES
+fig4, axs4 = plt.subplots(3, sharex=True, num=4, clear=True)
+axs4[0].plot(adjTs, NEESpos)
+axs4[0].plot([0, (K - 1) * avgTs], np.repeat(CI2[None], 2, 0), "--r")
+axs4[0].set_ylabel("NEES pos")
+inCIpos = np.mean((CI2[0] <= NEESpos) * (NEESpos <= CI2[1]))
+axs4[0].set_title(f"{inCIpos*100:.1f}% inside {confprob*100:.1f}% CI")
+
+axs4[1].plot(adjTs, NEESvel)
+axs4[1].plot([0, (K - 1) * avgTs], np.repeat(CI2[None], 2, 0), "--r")
+axs4[1].set_ylabel("NEES vel")
+inCIvel = np.mean((CI2[0] <= NEESvel) * (NEESvel <= CI2[1]))
+axs4[1].set_title(f"{inCIvel*100:.1f}% inside {confprob*100:.1f}% CI")
+
+axs4[2].plot(adjTs, NEES)
+axs4[2].plot([0, (K - 1) * avgTs], np.repeat(CI4[None], 2, 0), "--r")
+axs4[2].set_ylabel("NEES")
+inCI = np.mean((CI2[0] <= NEES) * (NEES <= CI2[1]))
+axs4[2].set_title(f"{inCI*100:.1f}% inside {confprob*100:.1f}% CI")
+
+print(f"ANEESpos = {ANEESpos:.2f} with CI = [{CI2K[0]:.2f}, {CI2K[1]:.2f}]")
+print(f"ANEESvel = {ANEESvel:.2f} with CI = [{CI2K[0]:.2f}, {CI2K[1]:.2f}]")
+print(f"ANEES = {ANEES:.2f} with CI = [{CI4K[0]:.2f}, {CI4K[1]:.2f}]")
+
+# errors
+fig5, axs5 = plt.subplots(2, num=5, clear=True)
+axs5[0].plot(adjTs, np.linalg.norm(x_hat[:, :2] - Xgt[:, :2], axis=1))
+axs5[0].set_ylabel("position error")
+
+axs5[1].plot(adjTs, np.linalg.norm(x_hat[:, 2:4] - Xgt[:, 2:4], axis=1))
+axs5[1].set_ylabel("velocity error")
+
+plt.show()
+
+
