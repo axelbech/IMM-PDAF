@@ -121,14 +121,14 @@ plt.show(block=False)
 # %% setup and track
 
 # sensor
-sigma_z = 2.3 # 10
-clutter_intensity = 2 / (4000*4000) # 1e-2
-PD = 0.85 # 0.8
+sigma_z =  12
+clutter_intensity = 3 / (4000*4000) # 1e-2
+PD = 0.65 # 0.8
 gate_size = 4
 
 # dynamic models
-sigma_a_CV = 6
-sigma_a_CT = 6
+sigma_a_CV = 4
+sigma_a_CT = 4
 sigma_omega = 0.3
 
 
@@ -229,7 +229,7 @@ axs3[0].set_title(
 )
 axs3[0].axis("equal")
 # probabilities
-axs3[1].plot(np.arange(K) * Ts, prob_hat)
+axs3[1].plot(np.arange(K) * Ts[0], prob_hat)
 axs3[1].set_ylim([0, 1])
 axs3[1].set_ylabel("mode probability")
 axs3[1].set_xlabel("time")
