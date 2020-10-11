@@ -250,6 +250,5 @@ class EKF:
         sensor_state: Optional[Dict[str, Any]],
     ) -> bool:
         """ Check if z is inside sqrt(gate_sized_squared)-sigma ellipse of ekfstate in sensor_state """
-        NIS = self.NIS(z, ekfstate, sensor_state=sensor_state)
-
-        return NIS < gate_size_square  # TODO: a simple comparison should suffice here
+        
+        return (self.NIS(z, ekfstate, sensor_state=sensor_state) < gate_size_square)  # TODO: a simple comparison should suffice here

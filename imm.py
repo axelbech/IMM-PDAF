@@ -263,7 +263,7 @@ class IMM(Generic[MT]):
             - reduce self.filter[s].reduce_mixture for each s
         """
 
-        raise NotImplementedError  # TODO remove this when done
+#        raise NotImplementedError  # TODO remove this when done
         # extract probabilities as array
         ## eg. association weights/beta: Pr(a)
         weights = immstate_mixture.weights
@@ -289,7 +289,7 @@ class IMM(Generic[MT]):
             currentWeights = []
             currentComponents = []
             for asscIt in range(associationAmount):
-                currentWeights.append(mode_conditioned_component_prob[asscIt,modeIt])
+                currentWeights.append(mode_conditioned_component_prob[modeIt,asscIt])
                 currentComponents.append(immstate_mixture.components[asscIt].components[modeIt])
                 
             mode_indexed_association_mixture.append(MixtureParameters(np.array(currentWeights), currentComponents))
@@ -318,12 +318,12 @@ class IMM(Generic[MT]):
 
         # TODO: find which of the modes gates the measurement z, Hint: self.filters[0].gate
         mode_gated: List[bool] = []
-        NIS, NISes = NISes(z, immstate, sensor_state=sensor_state)
-        for index, nis in enumerate(NISes):
+        NIS, NISes = self.NISes(z, immstate, sensor_state=sensor_state)
+        for nis in NISes:
             if nis < gate_size_square:
-                mode_gated[index] = True
+                mode_gated = True
             else:
-                mode_gated[index] = False
+                mode_gated = False
 
         gated: bool = np.any(mode_gated) # TODO: check if _any_ of the modes gated the measurement
 
