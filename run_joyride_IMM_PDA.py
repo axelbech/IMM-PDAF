@@ -121,22 +121,30 @@ if play_movie:
 run_three_models = True  # Set to false to run IMM with two models (CV and CT)
 
 # sensor
-sigma_z = 14 # 10
+sigma_z = 20 # 10
 clutter_intensity = 4 / (4000*4000) # 1e-2
 PD = 0.65 # 0.8
 gate_size = 5
 
 # dynamic models
-sigma_a_CV = 0.5
-sigma_a_CT = 1
-sigma_omega = 0.3
+if run_three_models:   
+    sigma_a_CV = 0.5
+    sigma_a_CT = 2
+    # markov chain for three models
+    PI11 = 0.85
+    PI22 = 0.85
+else:
+    sigma_a_CV = 0.8
+    sigma_a_CT = 3
+    # markov chain for two models
+    PI11 = 0.9
+    PI22 = 0.9
+
+sigma_omega = 0.1#0.3
 sigma_a_CV_high = 2
 
-
-# markov chain
-PI11 = 0.7
-PI22 = 0.7
-PI33 = 0.7
+# markov chain for high variance CV model
+PI33 = 0.8
 
 p10 = 0.5  # initvalue for mode probabilities
 p20 = 0.5
@@ -145,7 +153,8 @@ PI = np.array([[PI11, (1-PI11)], [(1-PI22), PI22]])
 if run_three_models:
     p10 = 0.3  # initvalue for mode probabilities
     p20 = 0.35
-    p30 = 0.35 
+    p30 = 0.35
+#    PI = np.array([[PI11, (1-PI11)/4, 3*(1-PI11)/4], [(1-PI22)/4, PI22, 3*(1-PI22)/4], [(1-PI33)/2, (1-PI33)/2, PI33]]) #alternate transition matrix, more likely to jump into high CV if changing modes
     PI = np.array([[PI11, (1-PI11)/2, (1-PI11)/2], [(1-PI22)/2, PI22, (1-PI22)/2], [(1-PI33)/2, (1-PI33)/2, PI33]])
 assert np.allclose(np.sum(PI, axis=1), 1), "rows of PI must sum to 1"
 

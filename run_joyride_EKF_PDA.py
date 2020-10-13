@@ -95,7 +95,7 @@ ax1.set_title("True trajectory and the nearby measurements")
 plt.show(block=False)
 
 sigma_z = 20
-sigma_omega = 0.2
+sigma_omega = 0.1
 PD = 0.65
 clutter_intensity = 4 / (4000*4000)
 gate_size = 5
@@ -103,9 +103,9 @@ gate_size = 5
 useTurnRateModel = False
     
 if useTurnRateModel:
-    sigma_a = 10
+    sigma_a = 4 # works really well with sigma_omega = 0.1
     dynamic_model = dynamicmodels.ConstantTurnrate(sigma_a, sigma_omega)
-else:
+else: # constant velocity model
     sigma_a = 2
     dynamic_model = dynamicmodels.WhitenoiseAccelleration(sigma_a, n = 5)
 
