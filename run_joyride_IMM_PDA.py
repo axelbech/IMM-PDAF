@@ -130,21 +130,20 @@ gate_size = 5
 if run_three_models:   
     sigma_a_CV = 0.5
     sigma_a_CT = 2
+    sigma_a_CV_high = 2
     # markov chain for three models
     PI11 = 0.85
-    PI22 = 0.85
+    PI22 = 0.95
+    PI33 = 0.9
 else:
-    sigma_a_CV = 0.8
-    sigma_a_CT = 3
+    sigma_a_CV = 1
+    sigma_a_CT = 2
     # markov chain for two models
-    PI11 = 0.9
-    PI22 = 0.9
+    PI11 = 0.85
+    PI22 = 0.95
 
 sigma_omega = 0.1#0.3
-sigma_a_CV_high = 2
 
-# markov chain for high variance CV model
-PI33 = 0.8
 
 p10 = 0.5  # initvalue for mode probabilities
 p20 = 0.5

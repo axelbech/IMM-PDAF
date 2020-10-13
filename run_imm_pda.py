@@ -129,9 +129,9 @@ PD = 0.93 # 0.8
 gate_size = 4
 
 # dynamic models
-sigma_a_CV = 0.1#0.2
-sigma_a_CT = 0.15#0.3
-sigma_omega = 0.3
+sigma_a_CV = 0.05#0.2
+sigma_a_CT = 0.1#0.3
+sigma_omega = 0.05#0.3
 
 
 # markov chain
