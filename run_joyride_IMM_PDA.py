@@ -251,11 +251,11 @@ axs3[0].set_title(
 )
 axs3[0].axis("equal")
 # probabilities
-axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[0], label="CV")
-axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[1], label="CT")
+axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[0], label="CV", color = 'r')
+axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[1], label="CT", color = 'g')
 if run_three_models:
-    axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[2], label="CV-high")
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    axs3[1].plot(np.arange(K) * Ts[0], prob_hat.T[2], label="CV-high", color = 'm')
+plt.legend(bbox_to_anchor=(1.05, 1), loc='best', borderaxespad=0.)
 axs3[1].set_ylim([0, 1])
 axs3[1].set_ylabel("mode probability")
 axs3[1].set_xlabel("time")
