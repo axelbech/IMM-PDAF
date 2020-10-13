@@ -97,7 +97,7 @@ plt.show(block=False)
 sigma_z = 10
 sigma_omega = 0.2
 PD = 0.65
-clutter_intensity = 3 / (4000*4000)
+clutter_intensity = 4 / (4000*4000)
 gate_size = 5
 
 useTurnRateModel = False
