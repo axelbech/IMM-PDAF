@@ -94,7 +94,7 @@ ax1.plot(*Xgt.T[:2], color="C0", linewidth=1.5)
 ax1.set_title("True trajectory and the nearby measurements")
 plt.show(block=False)
 
-sigma_z = 10
+sigma_z = 20
 sigma_omega = 0.2
 PD = 0.65
 clutter_intensity = 4 / (4000*4000)
@@ -103,10 +103,10 @@ gate_size = 5
 useTurnRateModel = False
     
 if useTurnRateModel:
-    sigma_a = 6
+    sigma_a = 10
     dynamic_model = dynamicmodels.ConstantTurnrate(sigma_a, sigma_omega)
 else:
-    sigma_a = 4
+    sigma_a = 2
     dynamic_model = dynamicmodels.WhitenoiseAccelleration(sigma_a, n = 5)
 
 
@@ -176,7 +176,7 @@ fig3, ax3 = plt.subplots(num=3, clear=True)
 ax3.plot(*x_hat.T[:2], label=r"$\hat x$")
 ax3.plot(*Xgt.T[:2], label="$x$")
 ax3.set_title(
-    rf"$\sigma_a = {sigma_a:.3f}$, \sigma_z = {sigma_z:.3f}, posRMSE = {posRMSE:.2f}, velRMSE = {velRMSE:.2f}"
+    rf"$\sigma_a = {sigma_a:.3f}$, $\sigma_z = {sigma_z:.3f}$, posRMSE = {posRMSE:.2f}, velRMSE = {velRMSE:.2f}"
 )
 
 adjTs = np.arange(K) * Ts[0]
