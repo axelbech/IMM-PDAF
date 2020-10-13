@@ -123,14 +123,14 @@ if play_movie:
 # but no exceptions do not guarantee correct implementation.
 
 # sensor
-sigma_z = 2.9 # 10
-clutter_intensity = 50 / (500*800) # 1e-2
+sigma_z = 2#2.9 # 10
+clutter_intensity = 63 / (500*800) # 1e-2
 PD = 0.93 # 0.8
 gate_size = 4
 
 # dynamic models
-sigma_a_CV = 0.2
-sigma_a_CT = 0.3
+sigma_a_CV = 0.1#0.2
+sigma_a_CT = 0.15#0.3
 sigma_omega = 0.3
 
 
@@ -252,7 +252,7 @@ axs4[1].set_title(f"{inCIvel*100:.1f}% inside {confprob*100:.1f}% CI")
 axs4[2].plot(np.arange(K) * Ts, NEES)
 axs4[2].plot([0, (K - 1) * Ts], np.repeat(CI4[None], 2, 0), "--r")
 axs4[2].set_ylabel("NEES")
-inCI = np.mean((CI2[0] <= NEES) * (NEES <= CI2[1]))
+inCI = np.mean((CI4[0] <= NEES) * (NEES <= CI4[1]))
 axs4[2].set_title(f"{inCI*100:.1f}% inside {confprob*100:.1f}% CI")
 
 print(f"ANEESpos = {ANEESpos:.2f} with CI = [{CI2K[0]:.2f}, {CI2K[1]:.2f}]")

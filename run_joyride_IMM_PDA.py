@@ -95,28 +95,26 @@ ax1.plot(*Xgt.T[:2], color="C0", linewidth=1.5)
 ax1.set_title("True trajectory and the nearby measurements")
 plt.show(block=False)
 
-# =============================================================================
-# # %% play measurement movie. Remember that you can cross out the window
-# play_movie = True
-# play_slice = slice(0, K)
-# if play_movie:
-#     if "inline" in matplotlib.get_backend():
-#         print("the movie might not play with inline plots")
-#     fig2, ax2 = plt.subplots(num=2, clear=True)
-#     sh = ax2.scatter(np.nan, np.nan)
-#     th = ax2.set_title(f"measurements at step 0")
-#     mins = np.vstack(Z).min(axis=0)
-#     maxes = np.vstack(Z).max(axis=0)
-#     ax2.axis([mins[0], maxes[0], mins[1], maxes[1]])
-#     plotpause = 0.1
-#     # sets a pause in between time steps if it goes to fast
-#     for k, Zk in enumerate(Z[play_slice]):
-#         sh.set_offsets(Zk)
-#         th.set_text(f"measurements at step {k}")
-#         fig2.canvas.draw_idle()
-#         plt.show(block=False)
-#         plt.pause(plotpause)
-# =============================================================================
+ # %% play measurement movie. Remember that you can cross out the window
+play_movie = False
+play_slice = slice(0, K)
+if play_movie:
+     if "inline" in matplotlib.get_backend():
+         print("the movie might not play with inline plots")
+     fig2, ax2 = plt.subplots(num=2, clear=True)
+     sh = ax2.scatter(np.nan, np.nan)
+     th = ax2.set_title(f"measurements at step 0")
+     mins = np.vstack(Z).min(axis=0)
+     maxes = np.vstack(Z).max(axis=0)
+     ax2.axis([mins[0], maxes[0], mins[1], maxes[1]])
+     plotpause = 0.1
+     # sets a pause in between time steps if it goes to fast
+     for k, Zk in enumerate(Z[play_slice]):
+         sh.set_offsets(Zk)
+         th.set_text(f"measurements at step {k}")
+         fig2.canvas.draw_idle()
+         plt.show(block=False)
+         plt.pause(plotpause)
 
 # %% setup and track
 
@@ -274,7 +272,7 @@ axs4[1].set_title(f"{inCIvel*100:.1f}% inside {confprob*100:.1f}% CI")
 axs4[2].plot(adjTs, NEES)
 axs4[2].plot([0, (K - 1) * avgTs], np.repeat(CI4[None], 2, 0), "--r")
 axs4[2].set_ylabel("NEES")
-inCI = np.mean((CI2[0] <= NEES) * (NEES <= CI2[1]))
+inCI = np.mean((CI4[0] <= NEES) * (NEES <= CI4[1]))
 axs4[2].set_title(f"{inCI*100:.1f}% inside {confprob*100:.1f}% CI")
 
 print(f"ANEESpos = {ANEESpos:.2f} with CI = [{CI2K[0]:.2f}, {CI2K[1]:.2f}]")
