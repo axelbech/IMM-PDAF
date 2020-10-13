@@ -100,7 +100,7 @@ PD = 0.65
 clutter_intensity = 4 / (4000*4000)
 gate_size = 5
 
-useTurnRateModel = False
+useTurnRateModel = True
     
 if useTurnRateModel:
     sigma_a = 4 # works really well with sigma_omega = 0.1

@@ -128,8 +128,8 @@ gate_size = 5
 
 # dynamic models
 if run_three_models:   
-    sigma_a_CV = 0.5
-    sigma_a_CT = 2
+    sigma_a_CV = 0.3
+    sigma_a_CT = 1.6
     sigma_a_CV_high = 2
     # markov chain for three models
     PI11 = 0.85
